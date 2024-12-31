@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { TryCatch } from "../utils/helper.js";
+import { TryCatch } from "../utils/helper";
 
 const removeEmptyValues = (obj: any) => {
   const newObj = {};

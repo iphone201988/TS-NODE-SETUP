@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status";
-import ErrorHandler from "../utils/ErrorHandler.js";
+import ErrorHandler from "../utils/ErrorHandler";
 
 export const validateFiles = (requiredFiles: Array<string>) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -9,7 +8,7 @@ export const validateFiles = (requiredFiles: Array<string>) => {
       return next(
         new ErrorHandler(
           `${requiredFiles[0]} is required`,
-          httpStatus.BAD_REQUEST
+          400
         )
       );
 
@@ -17,7 +16,7 @@ export const validateFiles = (requiredFiles: Array<string>) => {
     requiredFiles.forEach((fileKey: string) => {
       if (!req.files[fileKey])
         return next(
-          new ErrorHandler(`${fileKey} is required`, httpStatus.BAD_REQUEST)
+          new ErrorHandler(`${fileKey} is required`, 400)
         );
     });
 

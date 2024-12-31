@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import ErrorHandler from "../utils/ErrorHandler.js";
-import { TryCatch } from "../utils/helper.js";
-import User from "../model/user.model.js";
+import ErrorHandler from "../utils/ErrorHandler";
+import { TryCatch } from "../utils/helper";
+import User from "../model/user.model";
 
 export const authenticationMiddleware = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -12,7 +11,7 @@ export const authenticationMiddleware = TryCatch(
       return next(
         new ErrorHandler(
           "Please login to access the route",
-          httpStatus.UNAUTHORIZED
+          401
         )
       );
 
@@ -21,15 +20,15 @@ export const authenticationMiddleware = TryCatch(
     const decode = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
 
     if (!decode)
-      return next(new ErrorHandler("Invalid token", httpStatus.UNAUTHORIZED));
+      return next(new ErrorHandler("Invalid token", 401));
 
     const user = await User.findById(decode.id);
 
     if (!user)
-      return next(new ErrorHandler("User not found", httpStatus.BAD_REQUEST));
+      return next(new ErrorHandler("User not found", 400));
 
     if (decode.jti !== user.jti)
-      return next(new ErrorHandler("Unauthorized", httpStatus.UNAUTHORIZED));
+      return next(new ErrorHandler("Unauthorized", 401));
 
     req.userId = user._id.toString();
     next();

@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
-import { deviceType } from "../utils/enums.js";
+import { deviceType } from "../utils/enums";
 
 const userSchema = new Schema(
   {
