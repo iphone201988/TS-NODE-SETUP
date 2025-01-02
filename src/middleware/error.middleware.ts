@@ -15,6 +15,10 @@ export const errorMiddleware = async (
     error.message = "Please login again.";
     error.statusCode = 401;
   }
+    if (error.message === "invalid signature") {
+    error.message = "Invalid token.";
+    error.statusCode = 400;
+  }
 
   res.status(error.statusCode).json({
     success: false,
