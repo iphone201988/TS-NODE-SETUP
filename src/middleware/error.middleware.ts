@@ -15,8 +15,16 @@ export const errorMiddleware = async (
     error.message = "Please login again.";
     error.statusCode = 401;
   }
-    if (error.message === "invalid signature") {
+  if (error.message === "invalid signature") {
     error.message = "Invalid token.";
+    error.statusCode = 400;
+  }
+
+  if ((error as any).code === 11000) {
+    const key = Object.keys((error as any).keyPattern)[0]; // Extract the duplicate field name
+    error.message = `${
+      key.charAt(0).toUpperCase() + key.slice(1)
+    } already exists.`;
     error.statusCode = 400;
   }
 

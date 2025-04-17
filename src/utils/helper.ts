@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
+import otpGenerator from "otp-generator";
+
 
 export const connectToDB = () => mongoose.connect(process.env.MONGO_URI);
 
@@ -13,37 +14,27 @@ export const generateJwtToken = (payload: any) => {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
-export const sendEmail = async (
-  email: string,
-  subject: string,
-  text: string,
-  html: string
-) => {
-  let transport = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.SMTP_EMAIL,
-      pass: process.env.SMTP_PASSWORD,
-    },
+
+export const generateRandomString = (length: number): string => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(){}[]:;<>+=?/|";
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
+export const generateOTP = () =>
+  otpGenerator.generate(4, {
+    upperCaseAlphabets: false,
+    lowerCaseAlphabets: false,
+    specialChars: false,
   });
 
-  const mailOptions = {
-    from: process.env.SMTP_EMAIL,
-    to: email,
-    subject,
-    text,
-    html,
-  };
-
-  transport.sendMail(mailOptions, function (err: any, info: any) {
-    if (err) {
-      console.log(err);
-    } else {
-      // console.log(info);
-    }
-  });
+export const addMinutesToCurrentTime = (minutes: number) => {
+  return new Date().getTime() + minutes * 60000;
 };
 
 export const getImages = (req: Request, fileNames: Array<string>) => {
@@ -66,4 +57,19 @@ export const getImages = (req: Request, fileNames: Array<string>) => {
   if (Object.keys(files).length) return files;
 
   return null;
+};
+
+type ResponseData = Record<string, any>;
+
+export const SUCCESS = (
+  res: Response,
+  status: number,
+  message: string,
+  data?: ResponseData
+): ResponseData => {
+  return res.status(status).json({
+    success: true,
+    message,
+    ...(data ? data : {}),
+  });
 };
