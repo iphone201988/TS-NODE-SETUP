@@ -22,7 +22,7 @@ export const authenticationMiddleware = TryCatch(
     if (!decode)
       return next(new ErrorHandler("Invalid token", 401));
 
-    const user = await User.findById(decode.id);
+    const user = await User.findById(decode.userId);
 
     if (!user)
       return next(new ErrorHandler("User not found", 400));
