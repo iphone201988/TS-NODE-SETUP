@@ -1,9 +1,6 @@
 import Joi from "joi";
 
-export const requiredStringValidation = (
-  key: string,
-  isRequired: boolean = true
-) => {
+export const stringValidation = (key: string, isRequired: boolean = true) => {
   let schema: any;
   if (isRequired) {
     schema = Joi.string()
@@ -100,6 +97,62 @@ export const emailValidation = (isRequired: boolean = true) => {
       "string.email": "Email must be a valid email address.",
       "string.empty": "Email cannot be empty.",
     });
+  }
+  return schema;
+};
+
+export const specificStringValidation = (
+  key: string,
+  type: any,
+  isRequired: boolean = true
+) => {
+  let schema: any;
+  if (isRequired) {
+    schema = Joi.string()
+      .required()
+      .valid(...Object.values({ ...type }))
+      .messages({
+        "string.base": `${key} must be a string.`,
+        "string.empty": `${key} cannot be empty.`,
+        "any.required": `${key} is required`,
+        "any.only": `Gender must be one of: ${Object.values(type).join(", ")}.`,
+      });
+  } else {
+    schema = Joi.string()
+      .optional()
+      .valid(...Object.values({ ...type }))
+      .messages({
+        "string.base": `${key} must be a string.`,
+        "string.empty": `${key} cannot be empty.`,
+        "any.only": `Gender must be one of: ${Object.values(type).join(", ")}.`,
+      });
+  }
+  return schema;
+};
+
+export const specificNumberValidation = (
+  key: string,
+  type: any,
+  isRequired: boolean = true
+) => {
+  let schema: any;
+  if (isRequired) {
+    schema = Joi.number()
+      .required()
+      .valid(...Object.values({ ...type }))
+      .messages({
+        "number.base": `${key} must be a number.`,
+        "any.required": `${key} is required`,
+        "any.only": `${key} must be one of: ${Object.values(type).join(", ")}.`,
+      });
+  } else {
+    schema = Joi.number()
+      .optional()
+      .valid(...Object.values({ ...type }))
+      .messages({
+        "number.base": `${key} must be a number.`,
+        "any.only": `${key} must be one of: ${Object.values(type).join(", ")}.`,
+      });
   }
   return schema;
 };

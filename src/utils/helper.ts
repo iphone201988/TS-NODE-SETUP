@@ -37,13 +37,13 @@ export const addMinutesToCurrentTime = (minutes: number) => {
   return new Date().getTime() + minutes * 60000;
 };
 
-export const getImages = (req: Request, fileNames: Array<string>) => {
+export const getFiles = (req: Request, fileNames: Array<string>) => {
   // Single file uploaded
-  if (fileNames.length == 1 && req.file) {
-    return {
-      [fileNames[0]]: process.env.BACKEND_URL + "/uploads/" + req.file.filename,
-    };
-  }
+  // if (fileNames.length == 1 && req.file) {
+  //   return {
+  //     [fileNames[0]]: process.env.BACKEND_URL + "/uploads/" + req.file.filename,
+  //   };
+  // }
 
   // Multiple files uploaded
   const files: any = {};
