@@ -8,7 +8,7 @@ export const connectToDB = () => mongoose.connect(process.env.MONGO_URI);
 
 export const TryCatch =
   (func: any) => (req: Request, res: Response, next: NextFunction) =>
-    Promise.resolve(func(req, res, next)).catch();
+    Promise.resolve(func(req, res, next)).catch(next);
 
 export const generateJwtToken = (payload: any) => {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
