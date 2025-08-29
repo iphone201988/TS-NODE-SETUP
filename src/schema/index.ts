@@ -22,6 +22,29 @@ export const stringValidation = (key: string, isRequired: boolean = true) => {
   return schema;
 };
 
+export const urlValidation = (key: string, isRequired: boolean = true) => {
+  let schema: any;
+  if (isRequired) {
+    schema = Joi.string()
+      .uri()
+      .required()
+      .messages({
+        "string.base": `${key} must be a string.`,
+        "string.uri": `${key} must be a valid URL.`,
+        "any.required": `${key} is required.`,
+      });
+  } else {
+    schema = Joi.string()
+      .required()
+      .messages({
+        "string.base": `${key} must be a string.`,
+        "string.uri": `${key} must be a valid URL.`,
+      });
+  }
+
+  return schema;
+};
+
 export const booleanValidation = (key: string, isRequired: boolean = true) => {
   let schema: any;
 
